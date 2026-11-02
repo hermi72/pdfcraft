@@ -674,7 +674,7 @@ pub(crate) fn body(ui: &mut egui::Ui, app: &mut PdfCraftApp, mode: ClaudeMode, n
     match mode {
         ClaudeMode::Summary => {
             if draft.summary.is_empty() && !draft.running() {
-                ui.label(tl!("Claude reads the document and writes a summary of it."));
+                ui.label(tl!("Claude reads the whole document and writes a short summary with the key points, dates and to-dos."));
             } else {
                 output(ui, "claude-summary", &draft.summary);
             }
