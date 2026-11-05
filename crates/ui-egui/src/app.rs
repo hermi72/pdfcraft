@@ -308,6 +308,7 @@ impl PdfCraftApp {
             number_draft: NumberDraft { from: 1, to: 1, style: pdfcraft_engine::LabelStyle::Decimal, prefix: String::new(), start: 1 },
             word_count_draft: word_count_ui::Draft::default(),
             claude_draft: claude_ui::Draft::default(),
+            my_updates: my_updates_ui::State::default(),
         }
     }
 

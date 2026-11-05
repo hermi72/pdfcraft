@@ -13,6 +13,7 @@ pub(super) mod claude_ui;
 pub(super) mod comment_props;
 pub(super) mod credits;
 pub(super) mod marks_ui;
+pub(super) mod my_updates_ui;
 pub(super) mod pageboxes;
 pub(super) mod palette;
 pub(super) mod preferences;
@@ -99,6 +100,7 @@ fn dialogs(app: &mut PdfCraftApp, ctx: &egui::Context) {
     if !matches!(app.dialog, Some(Dialog::Claude(_))) {
         app.claude_draft.cancel();
     }
+    app.remind_about_updates();
     if app.dialog != Some(Dialog::FieldTable) {
         app.field_table_draft = None;
     }
@@ -158,6 +160,9 @@ fn dialog_body(ui: &mut egui::Ui, app: &mut PdfCraftApp, dialog: Dialog, req: &m
         }
         Dialog::Claude(mode) => {
             req.close = crate::claude_ui::body(ui, app, mode, &mut req.next);
+        }
+        Dialog::MyUpdates => {
+            req.close = crate::my_updates_ui::body(ui, app);
         }
         Dialog::CreateImages => {
             let (go, cancel) = crate::create_ui::image_import_body(ui, app);

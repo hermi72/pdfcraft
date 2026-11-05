@@ -6,6 +6,10 @@
 /// The release version from the workspace `Cargo.toml`.
 pub const VERSION: &str = env!("CARGO_PKG_VERSION");
 
+/// The git commit this build was made from, when the build set `PDFCRAFT_BUILD_SHA`
+/// (MypdfCraft's update script does): the update check compares it with the fork.
+pub const COMMIT: Option<&str> = option_env!("PDFCRAFT_BUILD_SHA");
+
 /// The compile-time build label, if any.
 pub const LABEL: Option<&str> = option_env!("PDFCRAFT_BUILD_LABEL");
 

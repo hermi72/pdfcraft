@@ -568,12 +568,18 @@ fn run(
 }
 
 fn key_path() -> Option<std::path::PathBuf> {
+    settings_file(KEY_FILE)
+}
+
+/// A file of this app's own in the settings folder (the portable folder in portable mode).
+pub(super) fn settings_file(name: &str) -> Option<std::path::PathBuf> {
     #[cfg(not(target_arch = "wasm32"))]
     {
-        crate::portable::data_dir().map(|d| d.join(KEY_FILE)).or_else(|| eframe::storage_dir("PdfCraft").map(|d| d.join(KEY_FILE)))
+        crate::portable::data_dir().map(|d| d.join(name)).or_else(|| eframe::storage_dir("PdfCraft").map(|d| d.join(name)))
     }
     #[cfg(target_arch = "wasm32")]
     {
+        let _ = name;
         None
     }
 }

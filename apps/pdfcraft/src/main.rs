@@ -415,7 +415,10 @@ fn app_creator<'a>(
         {
             app.motion.source = Some(motion::source());
         }
-        app.set_startup_update_check(true);
+        // MypdfCraft: the official release check would offer to replace this build with the
+        // official app; its own check (Help ▸ Check for updates…) reminds instead.
+        app.set_startup_update_check(false);
+        app.enable_update_reminder();
         app.printer_source = Some(pdfcraft_ui_egui::system_printers());
         app.os_key_store_ids = cfg!(any(target_os = "macos", target_os = "windows"));
         #[cfg(target_os = "macos")]

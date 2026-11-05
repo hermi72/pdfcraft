@@ -250,7 +250,7 @@ impl PdfCraftApp {
             "optimize.reduce" => self.reduce_file_size(),
             "help.shortcuts" => self.dialog = Some(Dialog::Shortcuts),
             "help.about" => self.dialog = Some(Dialog::About),
-            "help.check_updates" => self.check_for_updates(),
+            "help.check_updates" => self.check_my_updates(),
             _ => return None,
         }
         Some(true)
