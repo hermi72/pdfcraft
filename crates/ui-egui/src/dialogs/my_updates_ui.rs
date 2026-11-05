@@ -33,8 +33,9 @@ struct Report {
 
 #[derive(Default)]
 pub(crate) struct State {
-    /// Set by the desktop app; tests and automation never get the start reminder.
-    reminder_enabled: bool,
+    /// Set by the desktop app. Without it (tests, automation) nothing checks on its own, nothing is
+    /// recorded in the settings folder and there is no start reminder.
+    live: bool,
     reminded: bool,
     /// Days since the last check when the dialog opened as a reminder (`Some(None)`: never checked).
     reminder: Option<Option<u64>>,
@@ -53,9 +54,10 @@ impl State {
         let (sender, receiver) = mpsc::channel();
         self.job = Some(receiver);
         let ctx = ctx.clone();
+        let live = self.live;
         let work = move || {
             let result = check(pdfcraft_engine::build_info::COMMIT);
-            if result.is_ok() {
+            if live && result.is_ok() {
                 save_last_check(now());
             }
             let _ = sender.send(result);
@@ -94,20 +96,20 @@ impl PdfCraftApp {
     pub(crate) fn check_my_updates(&mut self) {
         self.my_updates.reminder = None;
         self.dialog = Some(crate::Dialog::MyUpdates);
-        if let Some(ctx) = self.ctx.clone() {
+        if let Some(ctx) = self.ctx.clone().filter(|_| self.my_updates.live) {
             self.my_updates.start_check(&ctx, self.run_inline);
         }
     }
 
     /// Let the desktop app remind at start when the last check is old.
     pub fn enable_update_reminder(&mut self) {
-        self.my_updates.reminder_enabled = true;
+        self.my_updates.live = true;
     }
 
     /// Once per run, with nothing else open: open the dialog when the last check is too old.
     pub(crate) fn remind_about_updates(&mut self) {
         let state = &mut self.my_updates;
-        if !state.reminder_enabled || state.reminded || !self.update_check_at_start || self.dialog.is_some() {
+        if !state.live || state.reminded || !self.update_check_at_start || self.dialog.is_some() {
             return;
         }
         state.reminded = true;
@@ -371,9 +373,13 @@ mod tests {
     }
 
     #[test]
-    fn the_reminder_only_runs_when_enabled() {
+    fn without_the_desktop_app_nothing_checks_or_reminds_on_its_own() {
         let mut app = PdfCraftApp::new();
         app.remind_about_updates();
         assert!(app.dialog.is_none(), "tests and automation never get the reminder");
+        app.ctx = Some(egui::Context::default());
+        app.check_my_updates();
+        assert_eq!(app.dialog, Some(crate::Dialog::MyUpdates));
+        assert!(app.my_updates.job.is_none(), "opening the dialog in a test doesn't reach GitHub");
     }
 }
