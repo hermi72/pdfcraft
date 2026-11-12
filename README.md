@@ -1,3 +1,33 @@
+# MyPdfCraft
+
+**MyPdfCraft** ist eine persönliche Version von [PdfCraft](https://github.com/storytold/pdfcraft) mit zusätzlichen Funktionen:
+
+- **Claude-Knöpfe:** Zusammenfassen, Fragen zum Dokument und Übersetzen (Alle Werkzeuge ▸ Mehr anzeigen ▸ AI assistant)
+- **Dateigröße reduzieren** in drei Stufen (Light, Medium, Strong)
+- **Eigene Update-Prüfung** mit Update-Knopf (Hilfe ▸ Check for updates…)
+
+## Installation auf dem Mac
+
+1. **Terminal** öffnen (Programme ▸ Dienstprogramme ▸ Terminal).
+2. Diese Zeile einfügen und Return drücken:
+
+   ```
+   curl -fsSL https://raw.githubusercontent.com/hermi72/pdfcraft/main/scripts/install-mypdfcraft.sh | bash
+   ```
+
+3. Öffnet macOS ein Fenster für die **Befehlszeilenentwickler-Tools**, dort auf **Installieren** klicken, warten bis es fertig ist, und die Zeile aus Schritt 2 **noch einmal** einfügen.
+4. Warten: Der erste Build dauert **10–20 Minuten**. Danach liegt **MyPdfCraft** im Ordner **Programme in deinem Benutzerordner** (im Finder ⇧⌘H) und startet von selbst. Von dort ins Dock ziehen.
+
+**Deutsch einstellen:** In MyPdfCraft die Einstellungen öffnen (⌘,) und unter **Language** „Deutsch“ wählen.
+
+**Claude-Knöpfe:** [Claude Code](https://claude.com/claude-code) installieren und einmal `claude` im Terminal starten, um dich anzumelden. Alternativ im Claude-Fenster einen Anthropic-API-Schlüssel eintragen.
+
+**Updates:** In MyPdfCraft **Hilfe ▸ Check for updates…** öffnen und **Update MyPdfCraft** klicken. Nach 14 Tagen ohne Prüfung erinnert die App daran.
+
+**Voraussetzungen:** macOS 11 oder neuer, Internetverbindung, rund 10 GB freier Speicher für den Build.
+
+---
+
 <p align="center">
   <a href="https://getartcraft.com/">
     <picture>
