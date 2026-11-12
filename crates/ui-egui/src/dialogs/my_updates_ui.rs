@@ -1,4 +1,4 @@
-//! MypdfCraft's own updates (Help ▸ Check for updates…), in place of the official release check,
+//! MyPdfCraft's own updates (Help ▸ Check for updates…), in place of the official release check,
 //! which would replace this build with the official app.
 //!
 //! The check asks GitHub's public API for two numbers: commits on the official project that the
@@ -179,7 +179,7 @@ fn check(commit: Option<&str>) -> Result<Report, String> {
         .tls_config(tls)
         .timeout_global(Some(Duration::from_secs(20)))
         .http_status_as_error(false)
-        .user_agent("MypdfCraft")
+        .user_agent("MyPdfCraft")
         .build()
         .new_agent();
     let get = |url: String| -> Result<serde_json::Value, String> {
@@ -251,7 +251,7 @@ pub(crate) fn body(ui: &mut egui::Ui, app: &mut PdfCraftApp) -> bool {
     if let Some(days) = state.reminder {
         let text = match days {
             Some(d) => crate::i18n::fmt(tl!("You haven't checked for updates for {d} days."), &[("d", &d.to_string())]),
-            None => tl!("MypdfCraft hasn't checked for updates yet.").to_string(),
+            None => tl!("MyPdfCraft hasn't checked for updates yet.").to_string(),
         };
         ui.label(text);
         ui.add_space(6.0);
@@ -288,13 +288,13 @@ pub(crate) fn body(ui: &mut egui::Ui, app: &mut PdfCraftApp) -> bool {
             ui.add_space(8.0);
             let behind = report.community > 0 || report.yours != Some(0);
             if !behind {
-                ui.label(tl!("MypdfCraft is up to date."));
+                ui.label(tl!("MyPdfCraft is up to date."));
             }
             ui.horizontal(|ui| {
                 if behind {
                     match update_script() {
                         Some(script) => {
-                            if widgets::pill_button(ui, tl!("Update MypdfCraft"), true).clicked() {
+                            if widgets::pill_button(ui, tl!("Update MyPdfCraft"), true).clicked() {
                                 state.launched = Some(launch_update(&script));
                             }
                         }
@@ -306,13 +306,13 @@ pub(crate) fn body(ui: &mut egui::Ui, app: &mut PdfCraftApp) -> bool {
                 check = widgets::pill_button(ui, tl!("Check again"), false).clicked();
             });
             if behind {
-                ui.small(tl!("Update opens Terminal: it brings in the changes, runs the tests, uploads to your fork, rebuilds MypdfCraft and restarts it (5–10 minutes). It stops without changing anything if a change conflicts with yours."));
+                ui.small(tl!("Update opens Terminal: it brings in the changes, runs the tests, uploads to your fork, rebuilds MyPdfCraft and restarts it (5–10 minutes). It stops without changing anything if a change conflicts with yours."));
             }
         }
     }
     match &state.launched {
         Some(Ok(())) => {
-            ui.label(tl!("Terminal is updating MypdfCraft. Save your work: the app restarts when the update is done."));
+            ui.label(tl!("Terminal is updating MyPdfCraft. Save your work: the app restarts when the update is done."));
         }
         Some(Err(error)) => {
             ui.colored_label(ui.visuals().error_fg_color, error);

@@ -331,7 +331,7 @@ fn retry_with_gl(choice: RendererChoice, app_started: bool) -> bool {
 /// The window and renderer settings for one run.
 fn native_options(integrated: bool, app_frame: bool, renderer: eframe::Renderer) -> eframe::NativeOptions {
     let mut viewport = egui::ViewportBuilder::default()
-        .with_title("MypdfCraft")
+        .with_title("MyPdfCraft")
         .with_inner_size([1440.0, 920.0])
         .with_min_inner_size([820.0, 520.0])
         .with_drag_and_drop(true)
@@ -415,7 +415,7 @@ fn app_creator<'a>(
         {
             app.motion.source = Some(motion::source());
         }
-        // MypdfCraft: the official release check would offer to replace this build with the
+        // MyPdfCraft: the official release check would offer to replace this build with the
         // official app; its own check (Help ▸ Check for updates…) reminds instead.
         app.set_startup_update_check(false);
         app.enable_update_reminder();

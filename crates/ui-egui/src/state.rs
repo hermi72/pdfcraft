@@ -104,7 +104,7 @@ pub enum Dialog {
     WordCount,
     /// The AI assistant tools: Summarize, Ask about this document, Translate.
     Claude(crate::claude_ui::ClaudeMode),
-    /// Help ▸ Check for updates…: MypdfCraft's own update check.
+    /// Help ▸ Check for updates…: MyPdfCraft's own update check.
     MyUpdates,
     CreateImages,
     Properties(PropsTab),

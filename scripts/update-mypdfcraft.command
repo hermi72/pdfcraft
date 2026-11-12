@@ -1,7 +1,7 @@
 #!/bin/bash
-# Update MypdfCraft: bring in the official PdfCraft changes and the fork's own, test, upload to the
-# fork, rebuild ~/Applications/MypdfCraft.app and restart it. Started by Help ▸ Check for
-# updates… ▸ Update MypdfCraft (it opens this file in Terminal), or by hand.
+# Update MyPdfCraft: bring in the official PdfCraft changes and the fork's own, test, upload to the
+# fork, rebuild ~/Applications/MyPdfCraft.app and restart it. Started by Help ▸ Check for
+# updates… ▸ Update MyPdfCraft (it opens this file in Terminal), or by hand.
 #
 # Stops without changing anything when the project folder has unsaved changes, when a community
 # change conflicts with ours, or when the tests fail. Remotes: origin = storytold/pdfcraft,
@@ -9,13 +9,13 @@
 set -uo pipefail
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
-APP="${MYPDFCRAFT_APP:-$HOME/Applications/MypdfCraft.app}"
+APP="${MYPDFCRAFT_APP:-$HOME/Applications/MyPdfCraft.app}"
 BUNDLE_ID="ai.storyteller.pdfcraft.claude"
 
 step() { printf '\n\033[1m==> %s\033[0m\n' "$1"; }
 finish() { printf '\n'; read -r -p "Press Return to close this window. " _; exit "$1"; }
 fail() {
-  printf '\n\033[31mStopped: %s\033[0m\nMypdfCraft was not changed.\n' "$1"
+  printf '\n\033[31mStopped: %s\033[0m\nMyPdfCraft was not changed.\n' "$1"
   finish 1
 }
 running() { pgrep -f "$APP/Contents/MacOS/" >/dev/null; }
@@ -57,17 +57,22 @@ if [ "$(git rev-parse HEAD)" != "$(git rev-parse fork/main)" ]; then
   git push -q fork main || fail "uploading to GitHub failed. Try again later."
 fi
 
-step "Building MypdfCraft (5-10 minutes)"
+step "Building MyPdfCraft (5-10 minutes)"
 SHA="$(git rev-parse --short HEAD)"
 VERSION="$(sed -n 's/^version = "\(.*\)"/\1/p' Cargo.toml | head -1)"
-PDFCRAFT_BUILD_SHA="$SHA" cargo install -q --path apps/pdfcraft --locked -j 4 || fail "the build failed. Ask Claude to look at it."
+# The translations (German and the others) come from craft-i18n at the commit in craft-i18n.rev;
+# without them the interface is English only.
+I18N="${CRAFT_I18N_DIR:-$HOME/git/craft-i18n}"
+[ -d "$I18N/.git" ] || git clone -q https://github.com/storytold/craft-i18n "$I18N" || fail "could not download the translations."
+git -C "$I18N" fetch -q && git -C "$I18N" checkout -q "$(cat craft-i18n.rev)" || fail "could not get the translations for this version."
+CRAFT_I18N_DIR="$I18N" CRAFT_I18N_REQUIRED=1 PDFCRAFT_BUILD_SHA="$SHA" cargo install -q --path apps/pdfcraft --locked -j 4 || fail "the build failed. Ask Claude to look at it."
 
 step "Installing"
 if running; then
-  echo "Closing MypdfCraft (save your work if it asks)..."
+  echo "Closing MyPdfCraft (save your work if it asks)..."
   osascript -e "tell application id \"$BUNDLE_ID\" to quit" >/dev/null 2>&1
   for _ in $(seq 1 120); do running || break; sleep 1; done
-  running && fail "MypdfCraft is still open. Quit it, then run the update again (the build is kept, so it is quick)."
+  running && fail "MyPdfCraft is still open. Quit it, then run the update again (the build is kept, so it is quick)."
 fi
 cp "$HOME/.cargo/bin/pdfcraft" "$APP/Contents/MacOS/.PdfCraft.new" && mv -f "$APP/Contents/MacOS/.PdfCraft.new" "$APP/Contents/MacOS/PdfCraft" \
   || fail "could not copy the new version into $APP."
@@ -78,6 +83,6 @@ plutil -replace PdfCraftVersion -string "$VERSION-claude" "$PLIST"
 plutil -replace PdfCraftBuildCommit -string "$SHA" "$PLIST"
 codesign --force --deep --sign - "$APP" 2>/dev/null || fail "signing the app failed."
 
-step "Done: MypdfCraft $VERSION ($SHA)"
+step "Done: MyPdfCraft $VERSION ($SHA)"
 open "$APP"
 finish 0

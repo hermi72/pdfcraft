@@ -1,4 +1,4 @@
-//! The official release check (issue #28), with stand-in release sources (no network). MypdfCraft
+//! The official release check (issue #28), with stand-in release sources (no network). MyPdfCraft
 //! keeps it but routes Help ▸ Check for updates to its own check (`my_updates_ui`), so these call
 //! `check_for_updates` directly.
 
@@ -173,7 +173,7 @@ fn preferences_turn_the_check_at_start_off() {
     let (mut h, _calls) = started_with(r#"{"update_check_at_start": true}"#);
     h.state_mut().execute("app.preferences");
     h.run_steps(3);
-    h.get_by_label("Remind me when MypdfCraft hasn't checked for updates for 14 days").click();
+    h.get_by_label("Remind me when MyPdfCraft hasn't checked for updates for 14 days").click();
     h.run_steps(3);
     assert!(!h.state().update_check_at_start);
     // The control channel's option, as an agent sets it.

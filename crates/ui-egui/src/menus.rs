@@ -22,7 +22,7 @@ pub(super) mod tab_context;
 
 /// The app's name in the menus the layouts write (About, Hide, Quit), the window title and About.
 /// Settings and recovery folders keep the name "PdfCraft".
-pub(crate) const APP_NAME: &str = "MypdfCraft";
+pub(crate) const APP_NAME: &str = "MyPdfCraft";
 
 /// The top bar's width after the menus: the mode tabs, the search box and the buttons.
 const ROW_AFTER_MENUS: f32 = 720.0;
