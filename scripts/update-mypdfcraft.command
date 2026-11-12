@@ -54,7 +54,8 @@ fi
 
 if [ "$(git rev-parse HEAD)" != "$(git rev-parse fork/main)" ]; then
   step "Uploading to your fork"
-  git push -q fork main || fail "uploading to GitHub failed. Try again later."
+  # A Mac without a GitHub login can't upload; the app is still updated.
+  git push -q fork main || echo "Uploading to GitHub didn't work (not logged in?). Continuing; this Mac is updated anyway."
 fi
 
 step "Building MyPdfCraft (5-10 minutes)"
