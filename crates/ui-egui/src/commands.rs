@@ -260,7 +260,7 @@ impl PdfCraftApp {
             "create.multiple_separate" => self.create_multiple_separate_dialog(),
             "create.images" => self.create_from_images_dialog(),
             "create.clipboard" => self.create_from_clipboard(),
-            "optimize.reduce" => self.reduce_file_size(),
+            "optimize.reduce" => self.dialog = Some(Dialog::Reduce),
             "help.shortcuts" => self.dialog = Some(Dialog::Shortcuts),
             "help.about" => self.dialog = Some(Dialog::About),
             "help.check_updates" => self.check_my_updates(),

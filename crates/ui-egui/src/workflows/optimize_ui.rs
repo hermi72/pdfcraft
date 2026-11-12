@@ -570,3 +570,68 @@ mod tests {
         assert!(app.scan_clean_run.is_none());
     }
 }
+
+/// How hard Reduce File Size compresses (MyPdfCraft). Light is Acrobat's fixed choices; Medium and
+/// Strong resample colour and grey images further and store them at a lower JPEG quality.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq)]
+pub enum ReduceLevel {
+    #[default]
+    Light,
+    Medium,
+    Strong,
+}
+
+impl ReduceLevel {
+    pub fn settings(self) -> Settings {
+        let images = |ppi: f64, quality: u8| ImageSettings {
+            downsample: true,
+            target_ppi: ppi,
+            above_ppi: ppi * 1.5,
+            compression: Compression::Jpeg(quality),
+        };
+        match self {
+            ReduceLevel::Light => Settings::default(),
+            ReduceLevel::Medium => Settings { color: images(120.0, 45), gray: images(120.0, 45), ..Settings::default() },
+            ReduceLevel::Strong => Settings { color: images(72.0, 25), gray: images(72.0, 25), ..Settings::default() },
+        }
+    }
+}
+
+/// The Reduce File Size dialog: pick the strength, then Reduce asks where to save. Returns
+/// `(reduce, cancel)`.
+pub(crate) fn reduce_body(ui: &mut egui::Ui, app: &mut PdfCraftApp) -> (bool, bool) {
+    ui.heading(tl!("Reduce file size"));
+    ui.add_space(6.0);
+    for (level, name, about) in [
+        (ReduceLevel::Light, tl!("Light"), tl!("Images above 225 ppi to 150 ppi, medium quality. Hardly visible.")),
+        (ReduceLevel::Medium, tl!("Medium"), tl!("Images to 120 ppi, low quality. Good for e-mail.")),
+        (ReduceLevel::Strong, tl!("Strong"), tl!("Images to 72 ppi, minimum quality. Smallest file; pictures look worse.")),
+    ] {
+        widgets::radio_value(ui, &mut app.reduce_level, level, name);
+        ui.small(about);
+        ui.add_space(4.0);
+    }
+    ui.small(tl!("Mostly images and scans get smaller; a PDF of plain text changes little."));
+    ui.add_space(10.0);
+    let mut out = (false, false);
+    ui.horizontal(|ui| {
+        out.0 = widgets::pill_button(ui, tl!("Reduce"), true).clicked();
+        out.1 = widgets::pill_button(ui, tl!("Cancel"), false).clicked();
+    });
+    out
+}
+
+#[cfg(test)]
+mod reduce_level_tests {
+    use super::*;
+
+    #[test]
+    fn stronger_levels_resample_further_at_lower_quality() {
+        assert_eq!(ReduceLevel::Light.settings(), Settings::default());
+        let medium = ReduceLevel::Medium.settings();
+        let strong = ReduceLevel::Strong.settings();
+        assert!(strong.color.target_ppi < medium.color.target_ppi && medium.color.target_ppi < Settings::default().color.target_ppi);
+        assert_eq!(strong.color.compression, Compression::Jpeg(25));
+        assert_eq!(strong.gray, strong.color);
+    }
+}

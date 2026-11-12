@@ -255,9 +255,10 @@ impl PdfCraftApp {
     /// Reduce File Size: write a compacted copy with images downsampled (the open document is
     /// unchanged). It asks where to save first, so a heavy file can finish by itself, then runs in
     /// the background with a progress bar, like the PDF Optimizer.
-    pub(crate) fn reduce_file_size(&mut self) {
+    /// Compress a copy at the strength chosen in the Reduce File Size dialog ([`Self::reduce_level`]).
+    pub fn reduce_file_size(&mut self) {
         use crate::optimize_ui::OptimizeKind::Reduce;
-        let settings = pdfcraft_engine::optimize::Settings::default();
+        let settings = self.reduce_level.settings();
         #[cfg(target_arch = "wasm32")]
         self.start_optimize(Reduce, &settings, &[]);
         #[cfg(not(target_arch = "wasm32"))]

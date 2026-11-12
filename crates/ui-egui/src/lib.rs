@@ -797,6 +797,8 @@ pub struct PdfCraftApp {
     pub(crate) word_count_draft: word_count_ui::Draft,
     pub(crate) claude_draft: claude_ui::Draft,
     pub(crate) my_updates: my_updates_ui::State,
+    /// Reduce File Size's strength, kept while the app runs.
+    pub reduce_level: optimize_ui::ReduceLevel,
     pub printer_marks_draft: printer_marks_ui::PrinterMarksDraft,
     pub convert_colours_draft: convert_colours_ui::ConvertColoursDraft,
     pub hairlines_draft: hairlines_ui::HairlinesDraft,

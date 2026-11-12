@@ -186,6 +186,15 @@ fn dialog_body(ui: &mut egui::Ui, app: &mut PdfCraftApp, dialog: Dialog, req: &m
         Dialog::Claude(mode) => {
             req.close = crate::claude_ui::body(ui, app, mode, &mut req.next);
         }
+        Dialog::Reduce => {
+            let (reduce, cancel) = crate::optimize_ui::reduce_body(ui, app);
+            req.close = reduce || cancel;
+            if reduce {
+                app.dialog = None;
+                app.reduce_file_size();
+            }
+            return false;
+        }
         Dialog::MyUpdates => {
             req.close = crate::my_updates_ui::body(ui, app);
         }

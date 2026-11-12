@@ -106,6 +106,8 @@ pub enum Dialog {
     Claude(crate::claude_ui::ClaudeMode),
     /// Help ▸ Check for updates…: MyPdfCraft's own update check.
     MyUpdates,
+    /// File ▸ Reduce file size…: the strength, before asking where to save.
+    Reduce,
     CreateImages,
     Properties(PropsTab),
     About,

@@ -106,6 +106,11 @@ fn reduce(name: &'static str, bytes: Vec<u8>, out: &std::path::Path) -> egui_kit
     });
     h.run_steps(2);
     assert!(h.state_mut().execute("optimize.reduce"));
+    use egui_kittest::kittest::Queryable;
+    // MyPdfCraft asks for the strength first; Light is Acrobat's choices.
+    h.run_steps(2);
+    h.get_by_label("Reduce").click();
+    h.run_steps(1);
     // It runs on a worker thread like the PDF Optimizer, with the progress card meanwhile.
     let start = std::time::Instant::now();
     while h.state().optimize_run.is_some() && start.elapsed() < std::time::Duration::from_secs(30) {

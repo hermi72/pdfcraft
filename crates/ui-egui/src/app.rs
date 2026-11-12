@@ -360,6 +360,7 @@ impl PdfCraftApp {
             word_count_draft: word_count_ui::Draft::default(),
             claude_draft: claude_ui::Draft::default(),
             my_updates: my_updates_ui::State::default(),
+            reduce_level: Default::default(),
             printer_marks_draft: Default::default(),
             convert_colours_draft: Default::default(),
             hairlines_draft: Default::default(),
